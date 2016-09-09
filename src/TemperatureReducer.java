@@ -7,17 +7,23 @@ import java.io.IOException;
 /**
  * Created by gautham on 9/9/16.
  */
-class TemperatureReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable>
+class TemperatureReducer extends Reducer<Text, CustomWritable, Text, DoubleWritable>
 {
     @Override
-    protected void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException
+    protected void reduce(Text key, Iterable<CustomWritable> values, Context context) throws IOException, InterruptedException
     {
-        double max = Double.MIN_VALUE;
+        double maxValue = -10000;
+        String maxSno=null;
+        for (CustomWritable value : values)
+            if (value.getTemperature().get() > maxValue)
+            {
+                maxSno=value.getSerialNumber().toString();
+                maxValue = value.getTemperature().get();
 
-        for (DoubleWritable value : values)
-            if (value.get() > max)
-                max = value.get();
+                // Debug.
+                System.out.println("value = " + value.getSerialNumber().toString() + "\t" + value.getTemperature().get());
+            }
 
-        context.write(key, new DoubleWritable(max));
+        context.write(new Text(maxSno), new DoubleWritable(maxValue));
     }
 }
