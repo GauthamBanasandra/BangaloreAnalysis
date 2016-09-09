@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Created by gautham on 9/9/16.
  */
-public class TemperatureMapper extends Mapper<Text, Text, Text, DoubleWritable>
+class TemperatureMapper extends Mapper<Text, Text, Text, DoubleWritable>
 {
     @Override
     protected void map(Text key, Text value, Context context) throws IOException, InterruptedException
